@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3D Guadalajara — Impresión 3D a Medida</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&family=Rajdhani:wght@300;400;500;600;700&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://js.stripe.com/v3/"></script>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!-- NAVIGATION -->
+<nav id="mainNav">
+  <div class="nav-container">
+    <a href="#" class="nav-logo" onclick="navigateTo('home')">
+      <div class="logo-icon">
+        <svg viewBox="0 0 40 40" fill="none"><polygon points="20,2 38,12 38,28 20,38 2,28 2,12" stroke="var(--cyan)" stroke-width="1.5" fill="none"/><polygon points="20,8 32,14 32,26 20,32 8,26 8,14" stroke="var(--cyan)" stroke-width="1" fill="rgba(0,240,255,0.05)"/><line x1="20" y1="2" x2="20" y2="38" stroke="var(--cyan)" stroke-width="0.5" opacity="0.4"/></svg>
+      </div>
+      <span>3D <b>Guadalajara</b></span>
+    </a>
+    <button class="nav-toggle" onclick="toggleMenu()" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links">
+      <li><a href="#" onclick="navigateTo('home')">Inicio</a></li>
+      <li><a href="#" onclick="navigateTo('pricing')">Tarifas</a></li>
+      <li><a href="#" onclick="navigateTo('shop')">Tienda</a></li>
+      <li><a href="#" onclick="navigateTo('editor')">Editor 3D</a></li>
+      <li><a href="#" onclick="navigateTo('quote')">Presupuesto</a></li>
+      <li><a href="#" id="navUserBtn" onclick="navigateTo('auth')">Acceder</a></li>
+      <li id="navCartLi" style="display:none"><a href="#" onclick="navigateTo('cart')" class="cart-link">🛒 <span id="cartCount">0</span></a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- PAGES CONTAINER -->
+<main id="app">
+  <!-- HOME PAGE -->
+  <section id="page-home" class="page active"><!-- filled by JS --></section>
+  <!-- CATALOG -->
+  <section id="page-catalog" class="page"><!-- filled by JS --></section>
+  <!-- PRICING -->
+  <section id="page-pricing" class="page"><!-- filled by JS --></section>
+  <!-- SHOP -->
+  <section id="page-shop" class="page"><!-- filled by JS --></section>
+  <!-- EDITOR 3D -->
+  <section id="page-editor" class="page"><!-- filled by JS --></section>
+  <!-- QUOTE -->
+  <section id="page-quote" class="page"><!-- filled by JS --></section>
+  <!-- AUTH -->
+  <section id="page-auth" class="page"><!-- filled by JS --></section>
+  <!-- DASHBOARD -->
+  <section id="page-dashboard" class="page"><!-- filled by JS --></section>
+  <!-- ADMIN -->
+  <section id="page-admin" class="page"><!-- filled by JS --></section>
+  <!-- CART -->
+  <section id="page-cart" class="page"><!-- filled by JS --></section>
+  <!-- PRIVACY -->
+  <section id="page-privacy" class="page"><!-- filled by JS --></section>
+  <!-- COOKIES -->
+  <section id="page-cookies" class="page"><!-- filled by JS --></section>
+  <!-- TICKETS -->
+  <section id="page-tickets" class="page"><!-- filled by JS --></section>
+  <!-- SITEMAP -->
+  <section id="page-sitemap" class="page"><!-- filled by JS --></section>
+</main>
+
+<!-- CHAT WIDGET -->
+<div id="chatWidget" class="chat-widget">
+  <button class="chat-toggle" onclick="toggleChat()" aria-label="Chat de soporte">
+    <span class="chat-toggle-icon" id="chatToggleIcon">💬</span>
+  </button>
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div class="chat-avatar">3D</div>
+        <div>
+          <div style="font-family:var(--font-heading);font-weight:600;">Soporte 3D Guadalajara</div>
+          <div style="font-size:0.7rem;color:var(--success);">En línea</div>
+        </div>
+      </div>
+      <button class="chat-close" onclick="toggleChat()">✕</button>
+    </div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area">
+      <input type="text" class="chat-input" id="chatInput" placeholder="Escribe tu mensaje..." onkeydown="if(event.key==='Enter')sendChatMsg()">
+      <button class="chat-send" onclick="sendChatMsg()">➤</button>
+    </div>
+  </div>
+</div>
+
+<!-- COOKIE BANNER -->
+<div id="cookieBanner" class="cookie-banner">
+  <div class="cookie-content">
+    <p>Utilizamos cookies para mejorar tu experiencia. Al continuar navegando, aceptas nuestra <a href="#" onclick="navigateTo('cookies');closeCookieBanner()">Política de Cookies</a> y <a href="#" onclick="navigateTo('privacy');closeCookieBanner()">Política de Privacidad</a>.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary btn-small" onclick="acceptCookies()">Aceptar</button>
+      <button class="btn btn-secondary btn-small" onclick="closeCookieBanner()">Rechazar</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer id="mainFooter">
+  <div class="footer-grid">
+    <div>
+      <h4>3D Guadalajara</h4>
+      <p>Impresión 3D profesional a medida con tecnología Elegoo Centauri Carbon 2 Combo.</p>
+    </div>
+    <div>
+      <h4>Enlaces</h4>
+      <a href="#" onclick="navigateTo('pricing')">Tarifas</a>
+      <a href="#" onclick="navigateTo('shop')">Tienda</a>
+      <a href="#" onclick="navigateTo('editor')">Editor 3D</a>
+      <a href="#" onclick="navigateTo('sitemap')">Mapa del Sitio</a>
+    </div>
+    <div>
+      <h4>Soporte</h4>
+      <a href="#" onclick="navigateTo('tickets')">Tickets de Soporte</a>
+      <a href="#" onclick="navigateTo('privacy')">Política de Privacidad</a>
+      <a href="#" onclick="navigateTo('cookies')">Política de Cookies</a>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <p>Guadalajara, España</p>
+      <p><a id="footerPhone" href="tel:+34659919485" style="color:var(--cyan);text-decoration:none;">+34 659 919 485</a></p>
+      <p id="footerEmail">info@3dguadalajara.com</p>
+    </div>
+  </div>
+
+  <!-- FORMAS DE PAGO -->
+  <div class="footer-payment">
+    <h4>Formas de Pago Aceptadas</h4>
+    <div class="footer-payment-methods">
+      <div class="footer-pay-item">
+        <div class="footer-pay-icon">
+          <svg viewBox="0 0 48 32" fill="none"><rect x="1" y="1" width="46" height="30" rx="4" stroke="var(--cyan)" stroke-width="1.2" fill="rgba(0,240,255,0.04)"/><rect x="1" y="7" width="46" height="5" fill="rgba(0,240,255,0.15)"/><rect x="6" y="18" width="16" height="3" rx="1" fill="rgba(0,240,255,0.25)"/><rect x="6" y="23" width="10" height="2" rx="1" fill="rgba(0,240,255,0.15)"/><circle cx="36" cy="18" r="5" fill="rgba(255,0,128,0.2)" stroke="var(--magenta)" stroke-width="0.8"/><circle cx="40" cy="18" r="5" fill="rgba(0,240,255,0.15)" stroke="var(--cyan)" stroke-width="0.8"/></svg>
+        </div>
+        <span class="footer-pay-label">Tarjeta de crédito / débito</span>
+        <span class="footer-pay-desc">Visa, Mastercard, American Express. Pago seguro e instantáneo.</span>
+      </div>
+      <div class="footer-pay-item">
+        <div class="footer-pay-icon">
+          <svg viewBox="0 0 48 32" fill="none"><rect x="1" y="1" width="46" height="30" rx="4" stroke="var(--cyan)" stroke-width="1.2" fill="rgba(0,240,255,0.04)"/><rect x="8" y="6" width="32" height="6" rx="2" fill="rgba(0,240,255,0.12)" stroke="var(--cyan)" stroke-width="0.6"/><path d="M14 12 V26" stroke="var(--cyan)" stroke-width="0.8" stroke-dasharray="2 2"/><path d="M24 12 V26" stroke="var(--cyan)" stroke-width="0.8" stroke-dasharray="2 2"/><path d="M34 12 V26" stroke="var(--cyan)" stroke-width="0.8" stroke-dasharray="2 2"/><rect x="8" y="22" width="32" height="4" rx="1" fill="rgba(0,240,255,0.08)"/><text x="24" y="10" text-anchor="middle" font-size="4" fill="var(--cyan)" font-family="var(--font-heading)">IBAN</text></svg>
+        </div>
+        <span class="footer-pay-label">Transferencia bancaria</span>
+        <span class="footer-pay-desc">Transferencia directa a nuestra cuenta. El envío se realiza tras confirmar el pago (hasta 72h laborables).</span>
+      </div>
+      <div class="footer-pay-item">
+        <div class="footer-pay-icon">
+          <svg viewBox="0 0 48 32" fill="none"><rect x="1" y="1" width="46" height="30" rx="4" stroke="var(--cyan)" stroke-width="1.2" fill="rgba(0,240,255,0.04)"/><circle cx="24" cy="14" r="8" fill="rgba(0,240,255,0.08)" stroke="var(--cyan)" stroke-width="0.8"/><text x="24" y="16.5" text-anchor="middle" font-size="7" font-weight="bold" fill="var(--cyan)" font-family="var(--font-heading)">B</text><rect x="14" y="24" width="20" height="3" rx="1.5" fill="rgba(0,240,255,0.12)"/><text x="24" y="26.5" text-anchor="middle" font-size="3.5" fill="var(--cyan)" font-family="var(--font-heading)">BIZUM</text></svg>
+        </div>
+        <span class="footer-pay-label">Bizum</span>
+        <span class="footer-pay-desc">Pago instantáneo desde tu móvil. Rápido, sencillo y seguro.</span>
+      </div>
+      <div class="footer-pay-item">
+        <div class="footer-pay-icon">
+          <svg viewBox="0 0 48 32" fill="none"><rect x="1" y="1" width="46" height="30" rx="4" stroke="var(--cyan)" stroke-width="1.2" fill="rgba(0,240,255,0.04)"/><circle cx="24" cy="14" r="9" fill="none" stroke="var(--cyan)" stroke-width="0.8"/><circle cx="24" cy="14" r="5" fill="rgba(0,240,255,0.1)" stroke="var(--magenta)" stroke-width="0.6"/><circle cx="24" cy="14" r="2" fill="var(--cyan)" opacity="0.4"/><path d="M24 5 L24 2" stroke="var(--cyan)" stroke-width="0.6"/><path d="M24 23 L24 26" stroke="var(--cyan)" stroke-width="0.6"/><path d="M15 14 L12 14" stroke="var(--cyan)" stroke-width="0.6"/><path d="M33 14 L36 14" stroke="var(--cyan)" stroke-width="0.6"/><text x="24" y="28.5" text-anchor="middle" font-size="3" fill="var(--magenta)" font-family="var(--font-heading)">WORLDCOIN</text></svg>
+        </div>
+        <span class="footer-pay-label">Worldcoin (Crypto)</span>
+        <span class="footer-pay-desc">Pago con criptomonedas en red Optimism. El envío se realiza tras confirmar el pago (hasta 72h laborables).</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 3D Guadalajara. Todos los derechos reservados. | <a href="#" onclick="navigateTo('sitemap')" style="color:var(--text3);text-decoration:underline;">Mapa del Sitio</a></p>
+  </div>
+</footer>
+
+<!-- Toast notification -->
+<div id="toast" class="toast"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
